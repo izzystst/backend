@@ -37,7 +37,7 @@ def posts_index():
 		message="found all of the posts",
 		status=200), 200
 
-	# 
+# post show route 
 @posts.route('/<id>', methods=["GET"])
 def posts_show(id):
 	post = models.Post.get_by_id(id)
@@ -61,7 +61,15 @@ def random_post():
 		message=f"found a random post",
 		status=200
 		), 200
-
+@posts.route('/user/<id>', methods=["GET"])
+def users_posts(id):
+	users_posts= models.Post.select().where(models.Post.user == id)
+	users_posts_dict = [model_to_dict(users_post) for users_post in users_posts]
+	print(users_posts_dict)
+	return jsonify(
+		data=users_posts_dict,
+		message=f"found all posts by user {id}",
+		status=200), 200
 	# need  / map / texts / image 
 
 @posts.route('<id>', methods=["DELETE"])
