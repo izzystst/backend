@@ -53,7 +53,46 @@ def register():
 				message="registerd user",
 				status=201), 201
 
+@users.route('/login', methods=["POST"])
+def login():
+	payload= request.get_json()
+	payload['email']=payload['email'].lower()
+	payload['username']=payload['email'].lower()
 
+	try:
+		user = models.User.get(models.User.email==payload['email'])
+		user_dict = model_to_dict(user)
 
+		checked_password = check_password_hash(user_dict['password'], payload['password'])
+		if(checked_password):
+			login_user(user)
+			print(f'{current_user.username} is current_user.username in POST login')
+			user_dict.pop('password')
+
+			return jsonify(
+				data=user_dict,
+				message=f"logged in at {user_dict['email']}",
+				status=200
+				),200
+		else:
+			# bad password
+			return jsonify(
+				data={},
+				message="email or password is wrong",
+				status=401), 401
+
+	except models.DoesNotExist:
+		# wrong username 
+		return jsonify(
+			data={},
+			message="email or password is wrong",
+			status=401), 401
+@users.route("/logout", methods=['GET'])
+def logout():
+	logout_user()
+	return jsonify(
+		data={},
+		message="logged out!",
+		status=200), 200
 
 
