@@ -1,4 +1,5 @@
 import models
+from peewee import *
 
 from flask import Blueprint, request, jsonify
 from playhouse.shortcuts import model_to_dict
@@ -35,6 +36,8 @@ def posts_index():
 		data=posts_dict,
 		message="found all of the posts",
 		status=200), 200
+
+	# 
 @posts.route('/<id>', methods=["GET"])
 def posts_show(id):
 	post = models.Post.get_by_id(id)
@@ -45,3 +48,21 @@ def posts_show(id):
 		message=f"found session with id {id}",
 		status=200
 		), 200
+
+	# need random / map / texts / image 
+@posts.route('/random', methods=["GET"])
+def random_post():
+	randoms = models.Post.select().order_by(fn.Random()).limit(1)
+	print(randoms)
+	random_dict = [model_to_dict(random) for random in randoms]
+	print(random_dict)
+
+	return jsonify(
+		data=random_dict,
+		message=f"found a random post",
+		status=200
+		), 200
+
+
+
+
