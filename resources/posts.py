@@ -64,5 +64,7 @@ def random_post():
 
 	# need  / map / texts / image 
 
-
+@posts.route('<id>', methods=["DELETE"])
+def delete_post(id):
+	delete_query = models.Post.select().where(models.Post.id == id)
 
