@@ -95,4 +95,12 @@ def logout():
 		message="logged out!",
 		status=200), 200
 
+@users.route('<id>', methods=["DELETE"])
+def delete_user(id):
+	delete_query = models.User.delete().where(models.User.id == id)
+	num_rows_deleted = delete_query.execute()
+	return jsonify(
+		data={},
+		message=f"deleted user {id}",
+		status=200), 200
 

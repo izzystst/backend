@@ -49,7 +49,6 @@ def posts_show(id):
 		status=200
 		), 200
 
-	# need random / map / texts / image 
 @posts.route('/random', methods=["GET"])
 def random_post():
 	randoms = models.Post.select().order_by(fn.Random()).limit(1)
@@ -63,6 +62,7 @@ def random_post():
 		status=200
 		), 200
 
+	# need  / map / texts / image 
 
 
 
