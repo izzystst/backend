@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from resources.users import users
+from resources.posts import posts
 from flask_login import LoginManager, current_user
 import models
 DEBUG=True
@@ -20,7 +21,7 @@ def load_user(user_id):
 		return None
 
 app.register_blueprint(users, url_prefix='/api/v1/users')
-
+app.register_blueprint(posts, url_prefix='/api/v1/posts')
 @app.route('/')
 def hello():
 	return "hell world"
