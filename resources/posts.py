@@ -35,3 +35,13 @@ def posts_index():
 		data=posts_dict,
 		message="found all of the posts",
 		status=200), 200
+@posts.route('/<id>', methods=["GET"])
+def posts_show(id):
+	post = models.Post.get_by_id(id)
+	post_dict = model_to_dict(post)
+
+	return jsonify(
+		data=post_dict,
+		message=f"found session with id {id}",
+		status=200
+		), 200
