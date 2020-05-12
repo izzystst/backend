@@ -25,7 +25,7 @@ class Post(Model):
 	text=TextField()
 	Latitude=CharField()
 	Longitude=CharField()
-	image= CharField()
+	image= TextField()
 	user=ForeignKeyField(User, backref='Post', on_delete='CASCADE')
 
 	class Meta:

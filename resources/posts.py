@@ -1,10 +1,18 @@
 import models
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.probability import FreqDist
+
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
 from peewee import *
 
 from flask import Blueprint, request, jsonify
 from playhouse.shortcuts import model_to_dict
 
 from flask_login import LoginManager, current_user
+
 posts = Blueprint('posts', 'posts')
 
 # @posts.route('/', methods=["GET"])
@@ -71,8 +79,30 @@ def users_posts(id):
 		message=f"found all posts by user {id}",
 		status=200), 200
 	# need  / map / texts / image 
-
-@posts.route('<id>', methods=["DELETE"])
+# this is just for testing purposes
+@posts.route('/<id>', methods=["DELETE"])
 def delete_post(id):
 	delete_query = models.Post.select().where(models.Post.id == id)
 
+@posts.route("/common", methods=["GET"])
+def common_words():
+	posts = models.Post.select()
+	print(posts)
+
+	posts_dict = [model_to_dict(post) for post in posts]
+	print("this is the text")
+	print(posts_dict)
+	# print('this is the posts dict')
+	# print(posts_dict)
+	tokenizer = nltk.RegexpTokenizer(r"\w+")
+	nopunc = tokenizer.tokenize(posts_dict)
+	# print(nopunc)
+
+
+
+
+
+
+
+
+	return jsonify

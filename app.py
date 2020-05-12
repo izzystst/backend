@@ -3,6 +3,7 @@ from resources.users import users
 from resources.posts import posts
 from flask_login import LoginManager, current_user
 import models
+import commonwords
 from flask_cors import CORS
 DEBUG=True
 PORT=8000
