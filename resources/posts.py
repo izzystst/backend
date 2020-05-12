@@ -86,23 +86,21 @@ def delete_post(id):
 
 @posts.route("/common", methods=["GET"])
 def common_words():
-	posts = models.Post.select()
-	print(posts)
+	all_text = []
+	for post in models.Post.select():
+		all_text.append(post.text)
+	print("these are all posts")
+	print(all_text)
 
-	posts_dict = [model_to_dict(post) for post in posts]
-	print("this is the text")
-	print(posts_dict)
-	# print('this is the posts dict')
+	# posts_dict = [model_to_dict(post) for post in posts]
 	# print(posts_dict)
-	tokenizer = nltk.RegexpTokenizer(r"\w+")
-	nopunc = tokenizer.tokenize(posts_dict)
+	# # print('this is the posts dict')
+	# # print(posts_dict)
+	# tokenizer = nltk.RegexpTokenizer(r"\w+")
+	# nopunc = tokenizer.tokenize(posts_dict)
 	# print(nopunc)
 
-
-
-
-
-
-
-
-	return jsonify
+	return jsonify(
+		data=all_text,
+		message="found all the text in posts",
+		status=200), 200

@@ -9,7 +9,7 @@ from nltk.stem import PorterStemmer
 sample_text = state_union.raw("2006-GWBush.txt")
 tokenizer = nltk.RegexpTokenizer(r"\w+")
 nopunc = tokenizer.tokenize(sample_text)
-print(nopunc)
+# print(nopunc)
 # fdist = FreqDist()
 # for word in word_tokenize(sentance):
 stop_words = set(stopwords.words('english'))
@@ -21,10 +21,10 @@ stemwords = []
 for w in nopunc:
 	stemwords.append(ps.stem(w))
 
-print(stemwords)
+# print(stemwords)
 stemwords = [stemword for stemword in stemwords if stemword not in stop_words]
-print(stemwords)
+# print(stemwords)
 fdist = FreqDist(stemwords)
 
-for word, frequency in fdist.most_common(5):
-	print(u'{};{}'.format(word, frequency))
+# for word, frequency in fdist.most_common(5):
+	# print(u'{};{}'.format(word, frequency))
