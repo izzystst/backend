@@ -1,6 +1,7 @@
 import models
 import nltk
-from nltk.tokenize import word_tokenize
+
+from nltk.tokenize import word_tokenize, PunktSentenceTokenizer
 from nltk.probability import FreqDist
 
 from nltk.corpus import stopwords
@@ -91,7 +92,38 @@ def common_words():
 		all_text.append(post.text)
 	print("these are all posts")
 	print(all_text)
+	listToStr = ' '.join([str(elem) for elem in all_text]) 
+	print("this is th list now string")
+	print(listToStr)
+	# sample_text = state_union.raw("2006-GWBush.txt")
+	tokenizer = nltk.RegexpTokenizer(r"\w+")
+	nopunc = tokenizer.tokenize(listToStr)
+	print("this is without punct")
+	print(nopunc)
+	# print(nopunc)
+	# fdist = FreqDist()
+	# for word in word_tokenize(sentance):
+	stop_words = set(stopwords.words('english'))
+	ps = PorterStemmer()
 
+	# words = word_tokenize(nopunc)
+	# print(words)
+	stemwords = []
+	for w in nopunc:
+		stemwords.append(ps.stem(w))
+
+	# print(stemwords)
+	stemwords = [stemword for stemword in stemwords if stemword not in stop_words]
+	print(stemwords)
+	fdist = FreqDist(stemwords)
+
+	most_common_words = []
+	for word, frequency in fdist.most_common(5):
+		most_common_words.append(word)
+		print(u'{};{}'.format(word, frequency))
+
+	print("these are the common wordds")
+	print(most_common_words)
 	# posts_dict = [model_to_dict(post) for post in posts]
 	# print(posts_dict)
 	# # print('this is the posts dict')
@@ -101,6 +133,6 @@ def common_words():
 	# print(nopunc)
 
 	return jsonify(
-		data=all_text,
+		data={"all text": all_text, "common_words": most_common_words},
 		message="found all the text in posts",
 		status=200), 200
