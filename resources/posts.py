@@ -1,5 +1,7 @@
 import models
 import nltk
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 from nltk.tokenize import word_tokenize, PunktSentenceTokenizer
 from nltk.probability import FreqDist
@@ -72,7 +74,7 @@ def random_post():
 		), 200
 @posts.route('/user/<id>', methods=["GET"])
 def users_posts(id):
-	users_posts= models.Post.select().where(models.Post.user == id)
+	users_posts= models.Post.select().where(models.Post.user == id).order_by(models.Post.date.desc())
 	users_posts_dict = [model_to_dict(users_post) for users_post in users_posts]
 	print(users_posts_dict)
 	return jsonify(
@@ -92,29 +94,24 @@ def common_words():
 		all_text.append(post.text)
 	print("these are all posts")
 	print(all_text)
+	# creating a string of all the text
 	listToStr = ' '.join([str(elem) for elem in all_text]) 
 	print("this is th list now string")
 	print(listToStr)
-	# sample_text = state_union.raw("2006-GWBush.txt")
+	# this will tokenize and remove punctuation
 	tokenizer = nltk.RegexpTokenizer(r"\w+")
 	nopunc = tokenizer.tokenize(listToStr)
-	print("this is without punct")
-	print(nopunc)
-	# print(nopunc)
-	# fdist = FreqDist()
-	# for word in word_tokenize(sentance):
+	# setting the stop words
 	stop_words = set(stopwords.words('english'))
 	ps = PorterStemmer()
-
-	# words = word_tokenize(nopunc)
-	# print(words)
 	stemwords = []
+	# this is stemming all the words
 	for w in nopunc:
 		stemwords.append(ps.stem(w))
-
-	# print(stemwords)
+	# removing the stopwords from the list of total words
 	stemwords = [stemword for stemword in stemwords if stemword not in stop_words]
 	print(stemwords)
+	# freqnescy of words 
 	fdist = FreqDist(stemwords)
 
 	most_common_words = []
@@ -124,15 +121,21 @@ def common_words():
 
 	print("these are the common wordds")
 	print(most_common_words)
-	# posts_dict = [model_to_dict(post) for post in posts]
-	# print(posts_dict)
-	# # print('this is the posts dict')
-	# # print(posts_dict)
-	# tokenizer = nltk.RegexpTokenizer(r"\w+")
-	# nopunc = tokenizer.tokenize(posts_dict)
-	# print(nopunc)
+	text_posts = {}
+	for word in most_common_words:
+		print(word)
+		texts = models.Post.select().where(models.Post.text.contains(word))
+		text_dict = [model_to_dict(text) for text in texts]
+		# print("text dict")
+		pp.pprint(text_dict)
+		text_posts[word] = text_dict
+	pp.pprint(text_posts)
+
+
 
 	return jsonify(
-		data={"all text": all_text, "common_words": most_common_words},
-		message="found all the text in posts",
+		data={"all text": all_text, "common_words": most_common_words, "posts with common words": text_posts},
+		message="common words queries",
 		status=200), 200
+
+

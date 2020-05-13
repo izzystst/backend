@@ -14,6 +14,7 @@ class User(UserMixin, Model):
 	password=CharField(unique=True)
 	zipcode=CharField()
 	DOB=DateField()
+	# lastPost=DateField()
 	created=DateField(default=datetime.date.today)
 
 	class Meta:
