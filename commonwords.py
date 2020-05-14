@@ -1,11 +1,11 @@
-# import nltk
-# from resources.posts import posts, common_words
+import nltk
+from resources.posts import posts, common_words
 
-# from nltk.tokenize import word_tokenize, PunktSentenceTokenizer
-# from nltk.probability import FreqDist
+from nltk.tokenize import word_tokenize, PunktSentenceTokenizer
+from nltk.probability import FreqDist
 
-# from nltk.corpus import stopwords, state_union
-# from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
 
 # find_freq(words)
 
