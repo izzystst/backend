@@ -110,7 +110,7 @@ def common_words():
 		stemwords.append(ps.stem(w))
 	# removing the stopwords from the list of total words
 	stemwords = [stemword for stemword in stemwords if stemword not in stop_words]
-	print(stemwords)
+	# print(stemwords)
 	# freqnescy of words 
 	fdist = FreqDist(stemwords)
 
@@ -121,20 +121,22 @@ def common_words():
 
 	print("these are the common wordds")
 	print(most_common_words)
-	text_posts = {}
+	text_posts = []
+
 	for word in most_common_words:
-		print(word)
+		# print(word)
 		texts = models.Post.select().where(models.Post.text.contains(word))
 		text_dict = [model_to_dict(text) for text in texts]
-		# print("text dict")
-		pp.pprint(text_dict)
-		text_posts[word] = text_dict
+		# print('this is the word')
+		# print(word)
+		# pp.pprint(text_dict)
+		text_posts.append(text_dict)
 	pp.pprint(text_posts)
 
 
 
 	return jsonify(
-		data={"all text": all_text, "common_words": most_common_words, "posts with common words": text_posts},
+		data={"posts": text_posts, 'words': most_common_words},
 		message="common words queries",
 		status=200), 200
 
