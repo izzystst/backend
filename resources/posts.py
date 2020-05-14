@@ -103,6 +103,10 @@ def users_posts(id):
 @posts.route('/<id>', methods=["DELETE"])
 def delete_post(id):
 	delete_query = models.Post.select().where(models.Post.id == id)
+	return jsonify(
+		data={},
+		message="deleted",
+		status=200),200
 
 @posts.route("/common", methods=["GET"])
 def common_words():
@@ -163,17 +167,19 @@ def common_words():
 
 @posts.route("/today", methods=["GET"])
 def todays_posts():
-	today = datetime.date.today()
+	# today = datetime.date.today()
+	today = datetime.date.today() + datetime.timedelta(days=1)
 	# print(date.today())
 	print(current_user)
 	# (models.Post.date == today)
 # models.Post.date == today
 # models.Post.user ==current_user
-	todays = models.Post.select().where(models.Post.date == today).where(models.Post.date == today) 
-	todays_dict = [model_to_dict(today) for today in todays]
+	todays = models.Post.select().where(models.Post.date == today).where(models.Post.date == today).exists()
+	print(todays)
+	# todays_dict = [model_to_dict(today) for today in todays]
 
 	return jsonify(
-		data=todays_dict,
+		data=todays,
 		message="posts from today exist",
 		status=200),200
 		
