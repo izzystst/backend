@@ -102,7 +102,8 @@ def users_posts(id):
 # this is just for testing purposes
 @posts.route('/<id>', methods=["DELETE"])
 def delete_post(id):
-	delete_query = models.Post.select().where(models.Post.id == id)
+	delete_query = models.Post.get_by_id(id)
+	delete_query.delete_instance()
 	return jsonify(
 		data={},
 		message="deleted",
@@ -114,14 +115,14 @@ def common_words():
 	for post in models.Post.select():
 		all_text.append(post.text)
 	print("these are all posts")
-	print(all_text)
+	# print(all_text)
 	# creating a string of all the text
 	listToStr = ' '.join([str(elem) for elem in all_text]) 
-	print("this is th list now string")
-	print(listToStr)
+	# print("this is th list now string")
+	# print(listToStr)
 
 	# adding some more words to the to stop words
-	stop_words = set(stopwords.words('english'))
+	stop_words = stopwords.words('english')
 	# all_stopwords = stopwords.words('english')
 	stop_words.extend(['today', 'tommorrow', 'was'])
 	print("these are the stop words")
@@ -137,7 +138,8 @@ def common_words():
 		stemwords.append(ps.stem(w))
 	# removing the stopwords from the list of total words
 	stemwords = [stemword for stemword in stemwords if stemword not in stop_words]
-	# print(stemwords)
+	print("this is after stopwords")
+	print(stemwords)
 	# freqnescy of words 
 	fdist = FreqDist(stemwords)
 
@@ -146,8 +148,8 @@ def common_words():
 		most_common_words.append(word)
 		print(u'{};{}'.format(word, frequency))
 
-	print("these are the common wordds")
-	print(most_common_words)
+	# print("these are the common wordds")
+	# print(most_common_words)
 	text_posts = []
 
 	for word in most_common_words:
@@ -158,7 +160,7 @@ def common_words():
 		# print(word)
 		# pp.pprint(text_dict)
 		text_posts.append(text_dict)
-	pp.pprint(text_posts)
+	# pp.pprint(text_posts)
 
 	return jsonify(
 		data={"posts": text_posts, 'words': most_common_words},
@@ -168,16 +170,19 @@ def common_words():
 @posts.route("/today", methods=["GET"])
 def todays_posts():
 	# today = datetime.date.today()
-	today = datetime.date.today() + datetime.timedelta(days=1)
+	today = datetime.date.today() 
 	# print(date.today())
+	# tomoorow =datetime.date.today() + datetime.timedelta(days=1)
 	print(current_user)
 	# (models.Post.date == today)
 # models.Post.date == today
 # models.Post.user ==current_user
-	todays = models.Post.select().where(models.Post.date == today).where(models.Post.date == today).exists()
+	todays = models.Post.select().where(models.Post.user == current_user.id).where(models.Post.date == today).exists()
 	print(todays)
-	# todays_dict = [model_to_dict(today) for today in todays]
-
+	# todayss = models.Post.select().where(models.Post.user == current_user.id & models.Post.date == today)
+	# todays_dict = [model_to_dict(today) for today in todayss]
+	# print(todays_dict)
+	# print(todays_dict)
 	return jsonify(
 		data=todays,
 		message="posts from today exist",
