@@ -115,11 +115,17 @@ def common_words():
 	listToStr = ' '.join([str(elem) for elem in all_text]) 
 	print("this is th list now string")
 	print(listToStr)
+
+	# adding some more words to the to stop words
+	stop_words = set(stopwords.words('english'))
+	# all_stopwords = stopwords.words('english')
+	stop_words.extend(['today', 'tommorrow', 'was'])
+	print("these are the stop words")
+	pp.pprint(stopwords)
 	# this will tokenize and remove punctuation
 	tokenizer = nltk.RegexpTokenizer(r"\w+")
 	nopunc = tokenizer.tokenize(listToStr)
 	# setting the stop words
-	stop_words = set(stopwords.words('english'))
 	ps = PorterStemmer()
 	stemwords = []
 	# this is stemming all the words
@@ -163,13 +169,12 @@ def todays_posts():
 	# (models.Post.date == today)
 # models.Post.date == today
 # models.Post.user ==current_user
-	todays = models.Post.select().where(models.Post.date == today) 
+	todays = models.Post.select().where(models.Post.date == today).where(models.Post.date == today) 
 	todays_dict = [model_to_dict(today) for today in todays]
-	print(todays_dict)
 
 	return jsonify(
 		data=todays_dict,
-		message="these are the posts from today",
+		message="posts from today exist",
 		status=200),200
 		
 
