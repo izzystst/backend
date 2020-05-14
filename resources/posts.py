@@ -1,6 +1,7 @@
 import models
 import nltk
 import pprint
+import datetime
 pp = pprint.PrettyPrinter(indent=4)
 
 from nltk.tokenize import word_tokenize, PunktSentenceTokenizer
@@ -24,6 +25,22 @@ posts = Blueprint('posts', 'posts')
 
 @posts.route('/', methods=["POST"])
 def create_post():
+	print("this is the current_user")
+	print(current_user)
+	print("this is todays datetime.datetime.today")
+	print(datetime.date.today())
+	today = datetime.date.today()
+	# print(date.today())
+	# (models.Post.date == today)
+	# models.Post.user == current_user
+	posts = models.Post.select().where(models.Post.user == current_user.id).where(models.Post.date == today)
+	print(posts)
+
+
+	finddict = [model_to_dict(post) for post in posts]
+	print("this is the finddcit")
+	print(finddict)
+	# print(finddict)
 	payload = request.get_json()
 	print('this is the payload')
 	print(payload)
@@ -133,11 +150,27 @@ def common_words():
 		text_posts.append(text_dict)
 	pp.pprint(text_posts)
 
-
-
 	return jsonify(
 		data={"posts": text_posts, 'words': most_common_words},
 		message="common words queries",
 		status=200), 200
+
+@posts.route("/today", methods=["GET"])
+def todays_posts():
+	today = datetime.date.today()
+	# print(date.today())
+	print(current_user)
+	# (models.Post.date == today)
+# models.Post.date == today
+# models.Post.user ==current_user
+	todays = models.Post.select().where(models.Post.date == today) 
+	todays_dict = [model_to_dict(today) for today in todays]
+	print(todays_dict)
+
+	return jsonify(
+		data=todays_dict,
+		message="these are the posts from today",
+		status=200),200
+		
 
 

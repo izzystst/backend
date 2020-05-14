@@ -30,7 +30,7 @@ class User(UserMixin, Model):
 
 
 class Post(Model):
-	date=DateTimeField(default=datetime.datetime.now)
+	date=DateTimeField(default=datetime.date.today)
 	text=TextField()
 	Latitude=CharField()
 	Longitude=CharField()
