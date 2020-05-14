@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, g
 import os
+from flask import Flask, jsonify, g
 
 from resources.users import users
 from resources.posts import posts
@@ -30,8 +30,8 @@ def unauthorized():
 		message="you must be logged in to do this",
 		status=401), 401
 
-CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(posts, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(users, origins=['http://localhost:3000', 'https://log73k.herokuapp.com'], supports_credentials=True)
+CORS(posts, origins=['http://localhost:3000', 'https://log73k.herokuapp.com'], supports_credentials=True)
 
 app.register_blueprint(users, url_prefix='/api/v1/users')
 app.register_blueprint(posts, url_prefix='/api/v1/posts')
