@@ -12,7 +12,7 @@ from nltk.stem import PorterStemmer
 
 from peewee import *
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, flash
 from playhouse.shortcuts import model_to_dict
 
 from flask_login import LoginManager, current_user
@@ -51,7 +51,7 @@ def create_post():
 
 	return jsonify(
 		data=post_dict,
-		message="succesfully created a post",
+		message="Congrats, you did your post for today!",
 		status=200), 200
 
 @posts.route('/', methods=["GET"])
@@ -124,7 +124,7 @@ def common_words():
 	# adding some more words to the to stop words
 	stop_words = stopwords.words('english')
 	# all_stopwords = stopwords.words('english')
-	stop_words.extend(['today', 'tommorrow', 'was'])
+	stop_words.extend(['today', 'tommorrow', 'was', 'wa'])
 	print("these are the stop words")
 	pp.pprint(stopwords)
 	# this will tokenize and remove punctuation
@@ -188,5 +188,12 @@ def todays_posts():
 		message="posts from today exist",
 		status=200),200
 		
-
+# @posts.route('/<query>', methods=["GET"])
+# def search(query):
+# 	print("yuo are calling the search")
+# 	postsWithQuery = models.Post.select()
+# 	# .where(models.Post.text).contains(query)
+# 	postsWithQuery_dict = [model_to_dict(postWithQuery) for postWithQuery in postsWithQuery]
+# 	print(postsWithQuery_dict)
+		
 

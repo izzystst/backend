@@ -1,6 +1,6 @@
 import models
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, flash
 from flask_bcrypt import generate_password_hash, check_password_hash
 from playhouse.shortcuts import model_to_dict
 from flask_login import login_user, current_user, logout_user
@@ -50,7 +50,7 @@ def register():
 
 			return jsonify(
 				data=created_user_dict,
-				message="registerd user",
+				message="congrats, you are now registered! Let's make your first post!",
 				status=201), 201
 
 @users.route('/login', methods=["POST"])
@@ -71,7 +71,7 @@ def login():
 
 			return jsonify(
 				data=user_dict,
-				message=f"logged in at {user_dict['email']}",
+				message=f"Congrats, you are now logged in as {user_dict['email']}",
 				status=200
 				),200
 		else:
@@ -92,7 +92,7 @@ def logout():
 	logout_user()
 	return jsonify(
 		data={},
-		message="logged out!",
+		message="logged out! See you tommorrow!",
 		status=200), 200
 
 @users.route('<id>', methods=["DELETE"])
@@ -101,6 +101,6 @@ def delete_user(id):
 	num_rows_deleted = delete_query.execute()
 	return jsonify(
 		data={},
-		message=f"deleted user {id}",
+		message="Sorry to see you go! We have deleted your account.",
 		status=200), 200
 
