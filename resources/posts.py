@@ -4,7 +4,7 @@ import pprint
 import datetime
 pp = pprint.PrettyPrinter(indent=4)
 
-from nltk.tokenize import word_tokenize, PunktSentenceTokenizer
+from nltk.tokenize import word_tokenize, PunktSentenceTokenizer, sent_tokenize
 from nltk.probability import FreqDist
 
 from nltk.corpus import stopwords
@@ -188,12 +188,55 @@ def todays_posts():
 		message="posts from today exist",
 		status=200),200
 		
-# @posts.route('/<query>', methods=["GET"])
-# def search(query):
-# 	print("yuo are calling the search")
-# 	postsWithQuery = models.Post.select()
-# 	# .where(models.Post.text).contains(query)
-# 	postsWithQuery_dict = [model_to_dict(postWithQuery) for postWithQuery in postsWithQuery]
-# 	print(postsWithQuery_dict)
-		
+@posts.route('/search/<query>', methods=["GET"])
+def search(query):
+	print(query)
+	print("yuo are calling the search")
+	all_text = []
+	for post in models.Post.select().where(models.Post.text.contains(query)):
+		all_text.append(post.text)
+	# .where(models.Post.text).contains(query)
+	# stringy the posts
+	listToStr = ' '.join([str(elem) for elem in all_text]) 
+
+	# posts_dict = [model_to_dict(post) for post in posts]
+	print(all_text)
+	print(";ength of all all_text")
+	print(len(all_text))
+	print("len of string")
+	print(listToStr)
+	print("this is the list to string, sent tokenize")
+	list_final_query= []
+	sentances = sent_tokenize(listToStr)
+	print("this is the sentance")
+	print(sentances)
+	# if query in sentances:
+	# 	print(sentances)
+	# 	list_final_query.append(sent)
+	# if any(query in s for s in sentances)
+	list_final_querys = [sentance for sentance in sentances if query in sentance]
+	print("this is the lst with the qury ")
+	print(list_final_querys)
+	# list_final_query_dict = [model_to_dict(list_final_query) for list_final_query in list_final_querys]
+	# print("this is the dict")
+	# print(list_final_query_dict)
+	# list_dict = model_to_dict(list_final_querys)
+	# print("\n \n \n \n this is the list dict")
+	# print(list_dict)
+	query_list={}
+	query_list[query]=list_final_querys
+	print(query_list)
+
+	return jsonify(
+		data=query_list,
+		message=f"these are the sentance that contain the query {query}",
+		status=200
+		), 200
+	#now i need to filter out the sentances that dont contain the query 
+	# sent = filter(query, sentances)
+	# print("the sentances are")
+	# for query in sent:
+
+	# 	print(query)
+
 
