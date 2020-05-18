@@ -191,7 +191,7 @@ def todays_posts():
 @posts.route('/search/<query>', methods=["GET"])
 def search(query):
 	print(query)
-	print("yuo are calling the search")
+	print("you are calling the search")
 	all_text = []
 	for post in models.Post.select().where(models.Post.text.contains(query)):
 		all_text.append(post.text)
@@ -207,14 +207,14 @@ def search(query):
 	print(listToStr)
 	print("this is the list to string, sent tokenize")
 	list_final_query= []
-	sentances = sent_tokenize(listToStr)
+	sentences = sent_tokenize(listToStr)
 	print("this is the sentance")
-	print(sentances)
+	print(sentences)
 	# if query in sentances:
 	# 	print(sentances)
 	# 	list_final_query.append(sent)
 	# if any(query in s for s in sentances)
-	list_final_querys = [sentance for sentance in sentances if query in sentance]
+	list_final_querys = [sentence for sentence in sentences if query in sentence]
 	print("this is the lst with the qury ")
 	print(list_final_querys)
 	# list_final_query_dict = [model_to_dict(list_final_query) for list_final_query in list_final_querys]
@@ -232,11 +232,20 @@ def search(query):
 		message=f"these are the sentance that contain the query {query}",
 		status=200
 		), 200
-	#now i need to filter out the sentances that dont contain the query 
-	# sent = filter(query, sentances)
-	# print("the sentances are")
-	# for query in sent:
 
-	# 	print(query)
+@posts.route("/<id>", methods=['PUT'])
+def update_date(id):
+	payload = request.get_json()
+	post_to_update = models.Post.get_by_id(id)
+	if 'date' in payload:
+		post_to_update.date= payload['date']
+	post_to_update.save()
+	updated_post_dict= model_to_dict(post_to_update)
+	return jsonify(
+		data=updated_post_dict,
+		message="updated dog",
+		status=200
+
+		), 200
 
 
